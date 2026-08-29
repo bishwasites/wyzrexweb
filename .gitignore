@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.env*
+!.env.example
+*.log
+.vercel
+.DS_Store
+tsconfig.tsbuildinfo
+
+# Raw frame-sequence source dumps — duplicates of the served copies under
+# public/assets/philosopher and public/assets/warrior; not read by the app.
+/Philosopher
+/Warrior

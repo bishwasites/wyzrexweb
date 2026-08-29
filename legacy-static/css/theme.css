@@ -1,0 +1,73 @@
+/* ==========================================================================
+   WYZREX — Theme tokens (light/dark share the same variable names)
+   ========================================================================== */
+
+:root,
+html[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #0a0a0a;
+  --surface: #f7f6f3;
+  --surface-2: #efeee9;
+  --line: #e4e2db;
+  --muted: rgba(10, 10, 10, 0.55);
+  --ink: #0a0a0a;
+  --ink-fg: #ffffff;
+  --gold: #d4af37;
+  --gold-light: #f1d68c;
+  --gold-dark: #a8842a;
+
+  --shadow: 0 20px 60px rgba(10, 10, 10, 0.08);
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --fg: #ffffff;
+  --surface: #141414;
+  --surface-2: #1c1c1c;
+  --line: rgba(255, 255, 255, 0.12);
+  --muted: rgba(255, 255, 255, 0.55);
+  --ink: #000000;
+  --ink-fg: #ffffff;
+  --gold: #d4af37;
+  --gold-light: #f1d68c;
+  --gold-dark: #a8842a;
+
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* Design tokens: radii / spacing / breakpoints (used via utility classes & components) */
+:root {
+  --radius-pill: 9999px;
+  --radius-card: 1.5rem;
+  --radius-card-sm: 1rem;
+  --radius-control: 0.75rem;
+
+  --container-max: 1400px;
+  --container-pad: 1.25rem;
+
+  --font-display: "Anton", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@media (min-width: 768px) {
+  :root { --container-pad: 2rem; }
+}
+
+/* Smooth theme transitions */
+html {
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html, body { transition: none; }
+}
