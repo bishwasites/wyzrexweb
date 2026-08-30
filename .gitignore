@@ -12,3 +12,6 @@ tsconfig.tsbuildinfo
 # public/assets/philosopher and public/assets/warrior; not read by the app.
 /Philosopher
 /Warrior
+
+.vercel
+.env*
