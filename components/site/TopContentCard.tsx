@@ -54,7 +54,7 @@ export default function TopContentCard({ item }: { item: TopContentItem }) {
       ref={containerRef}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group relative aspect-[9/16] w-[78%] flex-shrink-0 snap-center overflow-hidden rounded-[20px] border border-line transition-colors duration-300 hover:border-gold sm:w-auto sm:flex-shrink sm:snap-align-none"
+      className="group relative h-full w-full overflow-hidden rounded-[20px] border border-line transition-colors duration-300 hover:border-gold"
     >
       {showLiveMedia ? (
         hasVideo ? (

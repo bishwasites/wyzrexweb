@@ -24,7 +24,6 @@ export default async function WorkPage() {
     <>
       <FrameSequenceHero
         config={PHILOSOPHER_FRAMES}
-        pinHeight="200vh"
         sceneDescription="Illustrated Greek philosopher in quiet contemplation, camera slowly pushing in."
       >
         <div className="mx-auto flex min-h-[40vh] max-w-container items-center px-5 md:px-8">
@@ -37,21 +36,23 @@ export default async function WorkPage() {
         </div>
       </FrameSequenceHero>
 
-      <section>
-        <div className="mx-auto max-w-container px-5 md:px-8">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {caseStudies.map((c) => (
-              <RevealOnScroll key={c.id}>
-                <WorkCard caseStudy={c} />
-              </RevealOnScroll>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <MetaAdsSection />
 
       <TopContentsSection />
+
+      {caseStudies.length > 0 && (
+        <section>
+          <div className="mx-auto max-w-container px-5 md:px-8">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {caseStudies.map((c) => (
+                <RevealOnScroll key={c.id}>
+                  <WorkCard caseStudy={c} />
+                </RevealOnScroll>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <CtaBand />
     </>
