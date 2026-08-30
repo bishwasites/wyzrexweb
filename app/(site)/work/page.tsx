@@ -4,6 +4,8 @@ import FrameSequenceHero from "@/components/motion/FrameSequenceHero";
 import RevealOnScroll from "@/components/site/RevealOnScroll";
 import WorkCard from "@/components/site/WorkCard";
 import CtaBand from "@/components/site/CtaBand";
+import MetaAdsSection from "@/components/site/MetaAdsSection";
+import TopContentsSection from "@/components/site/TopContentsSection";
 import { PHILOSOPHER_FRAMES } from "@/lib/frames";
 import { getPublishedCaseStudies } from "@/lib/queries";
 import { getPageSections } from "@/lib/cms";
@@ -46,6 +48,10 @@ export default async function WorkPage() {
           </div>
         </div>
       </section>
+
+      <MetaAdsSection />
+
+      <TopContentsSection />
 
       <CtaBand />
     </>
