@@ -7,10 +7,15 @@ import type { SiteSettings } from "@/db/schema";
 
 export default function SiteSettingsForm({ initial }: { initial: SiteSettings | null }) {
   const [saving, setSaving] = useState(false);
+  const [uploadingCount, setUploadingCount] = useState(0);
+  const isUploading = uploadingCount > 0;
   const toast = useToast();
+  const onUploadingChange = (uploading: boolean) =>
+    setUploadingCount((count) => Math.max(0, count + (uploading ? 1 : -1)));
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isUploading) return;
     setSaving(true);
     const form = new FormData(e.currentTarget);
     const payload = Object.fromEntries(form.entries());
@@ -48,9 +53,9 @@ export default function SiteSettingsForm({ initial }: { initial: SiteSettings | 
       <section className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Branding</h2>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <UploadField name="logoLightUrl" label="Logo (light mode)" defaultValue={initial?.logoLightUrl ?? ""} accept="image/*" />
-          <UploadField name="logoDarkUrl" label="Logo (dark mode)" defaultValue={initial?.logoDarkUrl ?? ""} accept="image/*" />
-          <UploadField name="faviconUrl" label="Favicon" defaultValue={initial?.faviconUrl ?? ""} accept="image/*" />
+          <UploadField name="logoLightUrl" label="Logo (light mode)" defaultValue={initial?.logoLightUrl ?? ""} accept="image/*" onUploadingChange={onUploadingChange} />
+          <UploadField name="logoDarkUrl" label="Logo (dark mode)" defaultValue={initial?.logoDarkUrl ?? ""} accept="image/*" onUploadingChange={onUploadingChange} />
+          <UploadField name="faviconUrl" label="Favicon" defaultValue={initial?.faviconUrl ?? ""} accept="image/*" onUploadingChange={onUploadingChange} />
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium">Primary colour</label>
             <div className="flex items-center gap-3">
@@ -79,7 +84,7 @@ export default function SiteSettingsForm({ initial }: { initial: SiteSettings | 
               className="rounded-control border border-line bg-surface px-3 py-2 text-sm"
             />
           </div>
-          <UploadField name="ogImageUrl" label="Social share image (OG)" defaultValue={initial?.ogImageUrl ?? ""} accept="image/*" />
+          <UploadField name="ogImageUrl" label="Social share image (OG)" defaultValue={initial?.ogImageUrl ?? ""} accept="image/*" onUploadingChange={onUploadingChange} />
         </div>
       </section>
 
@@ -104,10 +109,10 @@ export default function SiteSettingsForm({ initial }: { initial: SiteSettings | 
 
       <button
         type="submit"
-        disabled={saving}
+        disabled={saving || isUploading}
         className="w-fit rounded-pill bg-gold px-6 py-3 text-sm font-semibold text-[#0a0a0a] disabled:opacity-60"
       >
-        {saving ? "Saving…" : "Save settings"}
+        {isUploading ? "Waiting for upload…" : saving ? "Saving…" : "Save settings"}
       </button>
     </form>
   );

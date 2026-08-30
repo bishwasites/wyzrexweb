@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import UploadField from "@/components/admin/UploadField";
 import type { CaseStudy } from "@/db/schema";
 
@@ -8,6 +11,11 @@ interface CaseStudyFormProps {
 }
 
 export default function CaseStudyForm({ action, initial, submitLabel }: CaseStudyFormProps) {
+  const [uploadingCount, setUploadingCount] = useState(0);
+  const isUploading = uploadingCount > 0;
+  const onUploadingChange = (uploading: boolean) =>
+    setUploadingCount((count) => Math.max(0, count + (uploading ? 1 : -1)));
+
   return (
     <form action={action} className="flex max-w-3xl flex-col gap-6">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -27,12 +35,18 @@ export default function CaseStudyForm({ action, initial, submitLabel }: CaseStud
       />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <UploadField name="clientLogoUrl" label="Client logo" defaultValue={initial?.clientLogoUrl} />
+        <UploadField
+          name="clientLogoUrl"
+          label="Client logo"
+          defaultValue={initial?.clientLogoUrl}
+          onUploadingChange={onUploadingChange}
+        />
         <UploadField
           name="heroMediaUrl"
           label="Hero media"
           defaultValue={initial?.heroMediaUrl}
           accept="image/*,video/*"
+          onUploadingChange={onUploadingChange}
         />
       </div>
 
@@ -65,9 +79,10 @@ export default function CaseStudyForm({ action, initial, submitLabel }: CaseStud
 
       <button
         type="submit"
-        className="w-fit rounded-pill bg-gold px-6 py-3 text-sm font-semibold text-[#0a0a0a] transition-opacity hover:opacity-90"
+        disabled={isUploading}
+        className="w-fit rounded-pill bg-gold px-6 py-3 text-sm font-semibold text-[#0a0a0a] transition-opacity hover:opacity-90 disabled:opacity-60"
       >
-        {submitLabel}
+        {isUploading ? "Waiting for upload…" : submitLabel}
       </button>
     </form>
   );

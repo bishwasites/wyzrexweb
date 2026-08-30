@@ -10,9 +10,11 @@ interface UploadFieldProps {
   label: string;
   defaultValue?: string | null;
   accept?: string;
+  /** Fires true when a file starts uploading, false once it settles (success or error) — lets the parent form hold Save disabled until every field has a real value. */
+  onUploadingChange?: (uploading: boolean) => void;
 }
 
-export default function UploadField({ name, label, defaultValue, accept = "image/*" }: UploadFieldProps) {
+export default function UploadField({ name, label, defaultValue, accept = "image/*", onUploadingChange }: UploadFieldProps) {
   const [url, setUrl] = useState(defaultValue ?? "");
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState("");
@@ -22,6 +24,7 @@ export default function UploadField({ name, label, defaultValue, accept = "image
     if (!file) return;
     setError("");
     setProgress(0);
+    onUploadingChange?.(true);
 
     try {
       const blob = await upload(file.name, file, {
@@ -35,6 +38,7 @@ export default function UploadField({ name, label, defaultValue, accept = "image
       setError(err instanceof Error ? err.message : "Upload failed.");
     } finally {
       setProgress(null);
+      onUploadingChange?.(false);
       e.target.value = "";
     }
   }

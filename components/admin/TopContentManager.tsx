@@ -1,9 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { addTopContent, deleteTopContent } from "@/lib/actions/case-studies";
 import UploadField from "@/components/admin/UploadField";
 import { TrashIcon } from "@/components/site/Icons";
 import type { TopContent } from "@/db/schema";
 
 export default function TopContentManager({ caseStudyId, items }: { caseStudyId: string; items: TopContent[] }) {
+  const [uploadingCount, setUploadingCount] = useState(0);
+  const isUploading = uploadingCount > 0;
+  const onUploadingChange = (uploading: boolean) =>
+    setUploadingCount((count) => Math.max(0, count + (uploading ? 1 : -1)));
+
   return (
     <div className="flex flex-col gap-4">
       {items.map((item) => (
@@ -53,12 +61,21 @@ export default function TopContentManager({ caseStudyId, items }: { caseStudyId:
           <label className="text-sm font-medium">Embed URL (optional — opens live post)</label>
           <input name="embedUrl" placeholder="https://instagram.com/p/..." className="rounded-control border border-line bg-surface px-3 py-2 text-sm" />
         </div>
-        <UploadField name="thumbnailUrl" label="Thumbnail" />
+        <UploadField name="thumbnailUrl" label="Thumbnail" onUploadingChange={onUploadingChange} />
         <div className="sm:col-span-2">
-          <UploadField name="mediaUrl" label="Video/media file (optional — plays inline instead of opening embed URL)" accept="image/*,video/*" />
+          <UploadField
+            name="mediaUrl"
+            label="Video/media file (optional — plays inline instead of opening embed URL)"
+            accept="image/*,video/*"
+            onUploadingChange={onUploadingChange}
+          />
         </div>
-        <button type="submit" className="w-fit rounded-pill bg-ink px-5 py-2.5 text-sm font-semibold text-ink-fg sm:col-span-2">
-          Add content
+        <button
+          type="submit"
+          disabled={isUploading}
+          className="w-fit rounded-pill bg-ink px-5 py-2.5 text-sm font-semibold text-ink-fg disabled:opacity-60 sm:col-span-2"
+        >
+          {isUploading ? "Waiting for upload…" : "Add content"}
         </button>
       </form>
     </div>

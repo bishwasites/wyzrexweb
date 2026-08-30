@@ -71,6 +71,10 @@ export default function ResourceManager<T extends ResourceRow>({
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+  // Counts active uploads rather than a single boolean so a form with more
+  // than one UploadField still blocks Save until all of them settle.
+  const [uploadingCount, setUploadingCount] = useState(0);
+  const isUploading = uploadingCount > 0;
   const toast = useToast();
 
   const rowsRef = useRef(rows);
@@ -88,18 +92,21 @@ export default function ResourceManager<T extends ResourceRow>({
 
   function openNew() {
     setError("");
+    setUploadingCount(0);
     setEditingId(null);
     setDrawerOpen(true);
   }
 
   function openEdit(row: T) {
     setError("");
+    setUploadingCount(0);
     setEditingId(row.id);
     setDrawerOpen(true);
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (isUploading) return;
     setSaving(true);
     setError("");
 
@@ -300,6 +307,9 @@ export default function ResourceManager<T extends ResourceRow>({
                   label={field.label}
                   defaultValue={currentValue}
                   accept={field.accept}
+                  onUploadingChange={(uploading) =>
+                    setUploadingCount((count) => Math.max(0, count + (uploading ? 1 : -1)))
+                  }
                 />
               );
             }
@@ -366,10 +376,10 @@ export default function ResourceManager<T extends ResourceRow>({
 
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || isUploading}
             className="mt-2 w-fit rounded-pill bg-gold px-5 py-2.5 text-sm font-semibold text-[#0a0a0a] disabled:opacity-60"
           >
-            {saving ? "Saving…" : editingRow ? "Save changes" : `Add ${singular}`}
+            {isUploading ? "Waiting for upload…" : saving ? "Saving…" : editingRow ? "Save changes" : `Add ${singular}`}
           </button>
         </form>
       </Drawer>
